@@ -121,4 +121,4 @@ print("SpectralClustering fit time:", end - start)
 ## 📖 Learn More
 
 For tutorials, API reference, visit the official site:  
-👉 [sbcluster Documentation](https://felixlaplante0.github.io/sbcluster)
+👉 [sbcluster's documentation](https://felixlaplante0.github.io/sbcluster)
