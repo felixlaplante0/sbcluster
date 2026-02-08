@@ -111,7 +111,7 @@ Example:
 API Reference
 -------------
 
-.. autoclass:: sbcluster._bridges.SpectralBridges
+.. autoclass:: sbcluster.SpectralBridges
    :members:
    :undoc-members:
    :show-inheritance:
