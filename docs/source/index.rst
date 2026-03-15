@@ -43,7 +43,7 @@ Example:
    from sklearn.model_selection import GridSearchCV
 
    # Load some synthetic data
-   data = np.genfromtxt("datasets/impossible.csv", delimiter=",")
+   data = np.genfromtxt("data/impossible.csv", delimiter=",")
    X, y = data[:, :-1], data[:, -1]
 
    # Define the parameter grid
