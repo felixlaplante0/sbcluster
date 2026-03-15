@@ -370,6 +370,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         """
         check_is_fitted(self, ("cluster_centers_", "cluster_labels_"))
 
+        X = np.asarray(validate_data(self, X))  # type: ignore
+
         dummy_kmeans = KMeans(
             self.n_clusters,
             self.n_iter,
