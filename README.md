@@ -75,9 +75,9 @@ print(f"Adjusted Rand Index: {ari}")
 # Visualize the clustering results
 plt.scatter(X[:, 0], X[:, 1], c=guess, alpha=0.1)
 plt.scatter(
-    grid_search.best_estimator_.cluster_centers_[:, 0],
-    grid_search.best_estimator_.cluster_centers_[:, 1],
-    c=grid_search.best_estimator_.cluster_labels_,
+    grid_search.best_estimator_.subcluster_centers_[:, 0],
+    grid_search.best_estimator_.subcluster_centers_[:, 1],
+    c=grid_search.best_estimator_.subcluster_labels_,
     marker="X",
 )
 plt.title("Clustered data and centroids with best SpectralBridges fit")

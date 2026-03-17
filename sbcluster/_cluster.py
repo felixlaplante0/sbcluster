@@ -60,9 +60,9 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         n_local_trials (int | None): Number of centroid initialization trials.
         random_state (int | None): Random state used for reproducibility.
         tol (float): Tolerance threshold for the normalized eigengap.
-        cluster_centers_ (np.ndarray | None): Coordinates of the cluster
+        ssubcluster_centers_ (np.ndarray | None): Coordinates of the subcluster
             centers in the spectral embedding.
-        cluster_labels_ (np.ndarray | None): Labels assigned to the clusters.
+        subcluster_labels_ (np.ndarray | None): Labels assigned to the subclusters.
         labels_ (np.ndarray | None): Cluster label assigned to each data point.
         affinity_matrix_ (np.ndarray | None): Computed affinity matrix.
         ngap_ (float | None): Normalized eigengap of the affinity matrix.
@@ -80,8 +80,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     n_local_trials: int | None
     random_state: int | None
     tol: float
-    cluster_centers_: np.ndarray | None
-    cluster_labels_: np.ndarray | None
+    subcluster_centers_: np.ndarray | None
+    subcluster_labels_: np.ndarray | None
     labels_: np.ndarray | None
     affinity_matrix_: np.ndarray | None
     ngap_: float | None
@@ -136,7 +136,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         self.n_local_trials = n_local_trials
         self.random_state = random_state
         self.tol = tol
-        self.cluster_centers_ = None
+        self.subcluster_centers_ = None
         self.ngap_ = None
         self.affinity_matrix_ = None
         self.eigvals_ = None
@@ -321,10 +321,10 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             self.n_local_trials,
             self.random_state,
         ).fit(X)
-        self.cluster_centers_ = cast(np.ndarray, kmeans.cluster_centers_)
+        self.subcluster_centers_ = cast(np.ndarray, kmeans.cluster_centers_)
 
         affinity_matrix = self._compute_affinity_matrix(
-            X, self.cluster_centers_, cast(np.ndarray, kmeans.labels_), self.p
+            X, self.subcluster_centers_, cast(np.ndarray, kmeans.labels_), self.p
         )
         self.affinity_matrix_ = self._scale_affinity_matrix(
             affinity_matrix, self.perplexity
@@ -338,13 +338,13 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         eigvecs /= np.linalg.norm(eigvecs, axis=1)[:, None]
         self.ngap_ = (eigvals[-1] - eigvals[-2]) / eigvals[-2]
 
-        self.cluster_labels_ = cast(
+        self.subcluster_labels_ = cast(
             np.ndarray,
             KMeans(self.n_clusters, self.n_iter, self.n_local_trials, self.random_state)
             .fit(eigvecs)
             .labels_,
         )
-        self.labels_ = self.cluster_labels_[kmeans.labels_]
+        self.labels_ = self.subcluster_labels_[kmeans.labels_]
 
         return self
 
@@ -362,13 +362,13 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
 
         Raises:
             ValueError: If `X` contains inf or NaN values.
-            ValueError: If `self.cluster_centers_` and `self.cluster_labels_` are not
+            ValueError: If `self.subcluster_centers_` and `self.subcluster_labels_` are not
                 set.
 
         Returns:
             np.ndarray The predicted cluster indices.
         """
-        check_is_fitted(self, ("cluster_centers_", "cluster_labels_"))
+        check_is_fitted(self, ("cluster_centers_", "subcluster_labels_"))
 
         X = np.asarray(validate_data(self, X))  # type: ignore
 
@@ -378,7 +378,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             self.n_local_trials,
             self.random_state,
         )
-        dummy_kmeans.cluster_centers_ = self.cluster_centers_
-        dummy_kmeans.labels_ = self.cluster_labels_
+        dummy_kmeans.cluster_centers_ = self.subcluster_centers_
+        dummy_kmeans.labels_ = self.subcluster_labels_
 
-        return cast(np.ndarray, self.cluster_labels_)[dummy_kmeans.predict(X)]
+        return cast(np.ndarray, self.subcluster_labels_)[dummy_kmeans.predict(X)]
