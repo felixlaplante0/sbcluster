@@ -60,9 +60,9 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         n_local_trials (int | None): Number of centroid initialization trials.
         random_state (int | None): Random state used for reproducibility.
         tol (float): Tolerance threshold for the normalized eigengap.
-        ssubcluster_centers_ (np.ndarray | None): Coordinates of the subcluster
+        cluster_centers_ (np.ndarray | None): Coordinates of the cluster
             centers in the spectral embedding.
-        subcluster_labels_ (np.ndarray | None): Labels assigned to the subclusters.
+        subcluster_labels_ (np.ndarray | None): Labels assigned to the clusters.
         labels_ (np.ndarray | None): Cluster label assigned to each data point.
         affinity_matrix_ (np.ndarray | None): Computed affinity matrix.
         ngap_ (float | None): Normalized eigengap of the affinity matrix.
@@ -80,7 +80,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     n_local_trials: int | None
     random_state: int | None
     tol: float
-    subcluster_centers_: np.ndarray | None
+    cluster_centers_: np.ndarray | None
     subcluster_labels_: np.ndarray | None
     labels_: np.ndarray | None
     affinity_matrix_: np.ndarray | None
@@ -137,6 +137,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         self.random_state = random_state
         self.tol = tol
         self.subcluster_centers_ = None
+        self.subcluster_labels_ = None
         self.ngap_ = None
         self.affinity_matrix_ = None
         self.eigvals_ = None
@@ -362,8 +363,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
 
         Raises:
             ValueError: If `X` contains inf or NaN values.
-            ValueError: If `self.subcluster_centers_` and `self.subcluster_labels_` are not
-                set.
+            ValueError: If `self.subcluster_centers_` and `self.subcluster_labels_` are
+                not set.
 
         Returns:
             np.ndarray The predicted cluster indices.
