@@ -4,7 +4,7 @@ description = "Spectral Bridges clustering algorithm"
 readme = "README.md"
 urls = { "Source" = "https://github.com/felixlaplante0/sbcluster" }
 authors = [{ name = "Félix Laplante" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["numpy", "scipy", "scikit-learn", "fastkmeanspp"]
 dynamic = ["version"]
 classifiers = [
