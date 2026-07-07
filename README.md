@@ -26,7 +26,7 @@ Spectral Bridges utilizes fastkmeanspp's efficient implementation for KMeans, wh
 ## 🚀 Installation
 
 ```bash
-pip install sbcluster
+python -m pip install sbcluster
 ```
 
 ## ✅ Data Verification
