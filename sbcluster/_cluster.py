@@ -306,7 +306,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         if self.n_nodes <= self.n_clusters:
             raise ValueError(
                 f"n_nodes must be greater than n_clusters, got {self.n_nodes} <= "
-                f"{self.n_clusters}"
+                f"{self.n_clusters}."
             )
 
         if X.shape[0] < self.n_nodes:
