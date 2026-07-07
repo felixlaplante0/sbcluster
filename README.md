@@ -1,5 +1,7 @@
 # 📊 Spectral Bridges
 
+[![codecov](https://codecov.io/gh/felixlaplante0/sbcluster/graph/badge.svg)](https://codecov.io/gh/felixlaplante0/sbcluster)
+
 **sbcluster** is a Python package that implements a novel clustering algorithm combining k-means and spectral clustering techniques, called **Spectral Bridges**. It leverages efficient affinity matrix computation and merges clusters based on a connectivity measure inspired by SVM's margin concept. This package is designed to provide robust clustering solutions, particularly suited for large datasets.
 
 ---
@@ -10,7 +12,7 @@
 - **Scalability**: Designed to handle large datasets by optimizing cluster formation through advanced affinity matrix computations.
 - **Customizable**: Parameters such as number of clusters, iterations, and random state allow flexibility in clustering configurations.
 - **Model selection**: Automatic model selection for number of nodes (m) according to a normalized eigengap metric.
-- **scikit-learn**: Native integration with the standard API, with easy options for model selection and evaluation.
+- **scikit-learn integration**: Native `BaseEstimator` integration with `fit`, `predict`, `fit_predict`, `get_params`, and model-selection scorers.
 
 
 ---
@@ -107,6 +109,8 @@ sc_low.fit(X)
 end = time()
 print("SpectralClustering fit time:", end - start)
 ```
+
+At prediction time, `SpectralBridges` first assigns each sample to the nearest learned subcluster center, then maps that subcluster to its final spectral cluster label.
 
 ## Results Comparison
 

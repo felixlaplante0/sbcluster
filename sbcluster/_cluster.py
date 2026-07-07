@@ -60,12 +60,13 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         n_local_trials (int | None): Number of centroid initialization trials.
         random_state (int | None): Random state used for reproducibility.
         tol (float): Tolerance threshold for the normalized eigengap.
-        cluster_centers_ (np.ndarray | None): Coordinates of the cluster
-            centers in the spectral embedding.
-        subcluster_labels_ (np.ndarray | None): Labels assigned to the clusters.
-        labels_ (np.ndarray | None): Cluster label assigned to each data point.
-        affinity_matrix_ (np.ndarray | None): Computed affinity matrix.
-        ngap_ (float | None): Normalized eigengap of the affinity matrix.
+        subcluster_centers_ (np.ndarray): Coordinates of the subcluster centers.
+        subcluster_labels_ (np.ndarray): Labels assigned to the subclusters.
+        labels_ (np.ndarray): Cluster label assigned to each data point.
+        affinity_matrix_ (np.ndarray): Computed affinity matrix.
+        eigvals_ (np.ndarray): Eigenvalues of the normalized graph Laplacian.
+        eigvecs_ (np.ndarray): Eigenvectors of the normalized graph Laplacian.
+        ngap_ (float): Normalized eigengap of the affinity matrix.
 
     Examples:
         >>> model = SpectralBridges(n_clusters=3, n_nodes=50, perplexity=30)
@@ -80,11 +81,13 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     n_local_trials: int | None
     random_state: int | None
     tol: float
-    cluster_centers_: np.ndarray | None
-    subcluster_labels_: np.ndarray | None
-    labels_: np.ndarray | None
-    affinity_matrix_: np.ndarray | None
-    ngap_: float | None
+    subcluster_centers_: np.ndarray
+    subcluster_labels_: np.ndarray
+    labels_: np.ndarray
+    affinity_matrix_: np.ndarray
+    eigvals_: np.ndarray
+    eigvecs_: np.ndarray
+    ngap_: float
 
     @validate_params(
         {
@@ -115,7 +118,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
 
         Args:
             n_clusters (int): The number of clusters to form.
-            n_nodes  (int | None): Number of nodes or initial clusters.
+            n_nodes (int): Number of nodes or initial clusters.
             p (float, optional): Power applied to the affinity matrix. Defaults to 2.0.
             perplexity (float, optional): Target perplexity for the affinity matrix.
                 Defaults to 2.0.
@@ -136,18 +139,6 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         self.n_local_trials = n_local_trials
         self.random_state = random_state
         self.tol = tol
-        self.subcluster_centers_ = None
-        self.subcluster_labels_ = None
-        self.ngap_ = None
-        self.affinity_matrix_ = None
-        self.eigvals_ = None
-        self.eigvecs_ = None
-
-        if self.n_nodes <= self.n_clusters:
-            raise ValueError(
-                f"n_nodes must be greater than n_clusters, got {self.n_nodes} <= "
-                f"{self.n_clusters}"
-            )
 
     @staticmethod
     def _compute_affinity_matrix(
@@ -276,14 +267,14 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             tuple[np.ndarray, np.ndarray]: The eigenvectors and eigenvalues of the
                 normalized Laplacian matrix.
         """
-        d = np.power(affinity_matrix.mean(axis=1), -0.5)
-        L = -(d[:, None] * affinity_matrix * d[None, :])
-        np.fill_diagonal(L, L.shape[0] + tol)
+        degree_scale = np.power(affinity_matrix.mean(axis=1), -0.5)
+        laplacian = -(degree_scale[:, None] * affinity_matrix * degree_scale[None, :])
+        np.fill_diagonal(laplacian, laplacian.shape[0] + tol)
 
         return cast(
             tuple[np.ndarray, np.ndarray],
             eigh(
-                L,
+                laplacian,
                 subset_by_index=[0, n_components],
             ),
         )
@@ -303,6 +294,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             y (None, optional): Placeholder for y.
 
         Raises:
+            ValueError: If `n_nodes` is less than or equal to `n_clusters`.
             ValueError: If the number of samples is less than the number of clusters.
             ValueError: If `X` contains inf or NaN values.
 
@@ -310,6 +302,12 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             Self: The fitted model.
         """
         X = np.asarray(validate_data(self, X))  # type: ignore
+
+        if self.n_nodes <= self.n_clusters:
+            raise ValueError(
+                f"n_nodes must be greater than n_clusters, got {self.n_nodes} <= "
+                f"{self.n_clusters}"
+            )
 
         if X.shape[0] < self.n_nodes:
             raise ValueError(
@@ -331,11 +329,12 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             affinity_matrix, self.perplexity
         )
 
-        eigvals, eigvecs = self._eigh_laplacian(
+        self.eigvals_, self.eigvecs_ = self._eigh_laplacian(
             self.affinity_matrix_, self.n_clusters, self.tol
         )
 
-        eigvecs = eigvecs[:, :-1]
+        eigvals = self.eigvals_
+        eigvecs = self.eigvecs_[:, :-1]
         eigvecs /= np.linalg.norm(eigvecs, axis=1)[:, None]
         self.ngap_ = (eigvals[-1] - eigvals[-2]) / eigvals[-2]
 
@@ -369,12 +368,12 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         Returns:
             np.ndarray The predicted cluster indices.
         """
-        check_is_fitted(self, ("cluster_centers_", "subcluster_labels_"))
+        check_is_fitted(self, ["subcluster_centers_", "subcluster_labels_"])
 
-        X = np.asarray(validate_data(self, X))  # type: ignore
+        X = np.asarray(validate_data(self, X, reset=False))  # type: ignore
 
         dummy_kmeans = KMeans(
-            self.n_clusters,
+            self.n_nodes,
             self.n_iter,
             self.n_local_trials,
             self.random_state,
