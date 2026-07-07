@@ -29,6 +29,15 @@ Spectral Bridges utilizes fastkmeanspp's efficient implementation for KMeans, wh
 pip install sbcluster
 ```
 
+## ✅ Data Verification
+
+The example datasets in `data/` include SHA-256 checksums. To verify them, run:
+
+```bash
+cd data
+sha256sum --check SHA256SUMS
+```
+
 ## 🔧 Usage
 
 ### Example
