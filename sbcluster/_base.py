@@ -1,5 +1,5 @@
 from numbers import Integral, Real
-from typing import Self, cast
+from typing import ClassVar, Self, cast
 
 import numpy as np
 from fastkmeanspp import KMeans
@@ -89,19 +89,17 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     eigvecs_: np.ndarray
     ngap_: float
 
-    @validate_params(
-        {
-            "n_clusters": [Interval(Integral, 1, None, closed="left")],
-            "n_nodes": [Interval(Integral, 2, None, closed="left")],
-            "p": [Interval(Real, 0, None, closed="right")],
-            "perplexity": [Interval(Real, 1, None, closed="neither")],
-            "n_iter": [Interval(Integral, 1, None, closed="left")],
-            "n_local_trials": [Interval(Integral, 1, None, closed="left"), None],
-            "random_state": ["random_state"],
-            "tol": [Interval(Real, 0, None, closed="left")],
-        },
-        prefer_skip_nested_validation=True,
-    )
+    _parameter_constraints: ClassVar[dict] = {
+        "n_clusters": [Interval(Integral, 1, None, closed="left")],
+        "n_nodes": [Interval(Integral, 2, None, closed="left")],
+        "p": [Interval(Real, 0, None, closed="right")],
+        "perplexity": [Interval(Real, 1, None, closed="neither")],
+        "n_iter": [Interval(Integral, 1, None, closed="left")],
+        "n_local_trials": [Interval(Integral, 1, None, closed="left"), None],
+        "random_state": ["random_state"],
+        "tol": [Interval(Real, 0, None, closed="left")],
+    }
+
     def __init__(
         self,
         n_clusters: int,
@@ -301,6 +299,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         Returns:
             Self: The fitted model.
         """
+        self._validate_params()
+
         X = np.asarray(validate_data(self, X))  # type: ignore
 
         if self.n_nodes <= self.n_clusters:
