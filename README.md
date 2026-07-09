@@ -12,7 +12,7 @@
 - **Scalability**: Designed to handle large datasets by optimizing cluster formation through advanced affinity matrix computations.
 - **Customizable**: Parameters such as number of clusters, iterations, and random state allow flexibility in clustering configurations.
 - **Model selection**: Automatic model selection for number of nodes (m) according to a normalized eigengap metric.
-- **scikit-learn integration**: Native `BaseEstimator` integration with `fit`, `predict`, `fit_predict`, `get_params`, and model-selection scorers.
+- **scikit-learn integration**: Native ``BaseEstimator`` integration with ``fit``, ``predict``, ``fit_predict``, ``get_params``, and model-selection scorers.
 
 
 ---
@@ -31,7 +31,7 @@ python -m pip install sbcluster
 
 ## ✅ Data Verification
 
-The example datasets in `data/` include SHA-256 checksums. To verify them, run:
+The example datasets in ``data/`` include SHA-256 checksums. To verify them, run:
 
 ```bash
 cd data
@@ -119,7 +119,7 @@ end = time()
 print("SpectralClustering fit time:", end - start)
 ```
 
-At prediction time, `SpectralBridges` first assigns each sample to the nearest learned subcluster center, then maps that subcluster to its final spectral cluster label.
+At prediction time, ``SpectralBridges`` first assigns each sample to the nearest learned subcluster center, then maps that subcluster to its final spectral cluster label.
 
 ## Results Comparison
 

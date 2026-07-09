@@ -21,7 +21,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     embedding space.
 
     The affinity matrix is built using a perplexity-based neighborhood scheme,
-    and may optionally be raised to a power :math:`p` to emphasize indirect
+    and may optionally be raised to a power :math:``p`` to emphasize indirect
     connections between nodes. Clustering is then performed on the leading
     eigenvectors of the normalized graph Laplacian.
 
@@ -30,24 +30,24 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     structure.
 
     Clustering settings:
-        - `n_clusters`: Number of clusters to form.
-        - `n_nodes`: Number of nodes or initial graph vertices used to construct
+        - ``n_clusters``: Number of clusters to form.
+        - ``n_nodes``: Number of nodes or initial graph vertices used to construct
           the affinity matrix.
 
     Affinity construction settings:
-        - `perplexity`: Target perplexity used to adapt local neighborhood
+        - ``perplexity``: Target perplexity used to adapt local neighborhood
           bandwidths when building the affinity matrix.
-        - `p`: Power applied to the affinity matrix to emphasize higher-order
+        - ``p``: Power applied to the affinity matrix to emphasize higher-order
           connectivity.
 
     k-means settings:
-        - `n_iter`: Maximum number of iterations for the k-means algorithm.
-        - `n_local_trials`: Number of seeding trials used during centroid
+        - ``n_iter``: Maximum number of iterations for the k-means algorithm.
+        - ``n_local_trials``: Number of seeding trials used during centroid
           initialization.
-        - `random_state`: Controls random initialization of centroids.
+        - ``random_state``: Controls random initialization of centroids.
 
     Convergence and diagnostics:
-        - `tol`: Tolerance threshold for the normalized eigengap used as a
+        - ``tol``: Tolerance threshold for the normalized eigengap used as a
           diagnostic for cluster separation.
 
     Attributes:
@@ -292,9 +292,9 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             y (None, optional): Placeholder for y.
 
         Raises:
-            ValueError: If `n_nodes` is less than or equal to `n_clusters`.
+            ValueError: If ``n_nodes`` is less than or equal to ``n_clusters``.
             ValueError: If the number of samples is less than the number of clusters.
-            ValueError: If `X` contains inf or NaN values.
+            ValueError: If ``X`` contains inf or NaN values.
 
         Returns:
             Self: The fitted model.
@@ -361,8 +361,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             X (np.typing.ArrayLike): The input data.
 
         Raises:
-            ValueError: If `X` contains inf or NaN values.
-            ValueError: If `self.subcluster_centers_` and `self.subcluster_labels_` are
+            ValueError: If ``X`` contains inf or NaN values.
+            ValueError: If ``self.subcluster_centers_`` and ``self.subcluster_labels_`` are
                 not set.
 
         Returns:
