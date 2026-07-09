@@ -362,8 +362,8 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
 
         Raises:
             ValueError: If ``X`` contains inf or NaN values.
-            ValueError: If ``self.subcluster_centers_`` and ``self.subcluster_labels_`` are
-                not set.
+            ValueError: If ``self.subcluster_centers_`` and ``self.subcluster_labels_``
+                are not set.
 
         Returns:
             np.ndarray The predicted cluster indices.
