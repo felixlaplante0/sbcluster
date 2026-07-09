@@ -14,20 +14,18 @@ from sklearn.utils.validation import check_is_fitted, validate_data  # type: ign
 class SpectralBridges(ClusterMixin, BaseEstimator):
     r"""Spectral Bridges clustering algorithm.
 
-    This estimator performs clustering by constructing an affinity matrix from
-    the input data and analyzing the spectral structure of the resulting graph.
-    The algorithm relies on the eigengap of the normalized affinity matrix to
-    detect cluster separation, followed by a k-means step in the spectral
-    embedding space.
+    This estimator performs clustering by constructing an affinity matrix from the input
+    data and analyzing the spectral structure of the resulting graph. The algorithm
+    relies on the eigengap of the normalized affinity matrix to detect cluster
+    separation, followed by a k-means step in the spectral embedding space.
 
-    The affinity matrix is built using a perplexity-based neighborhood scheme,
-    and may optionally be raised to a power :math:``p`` to emphasize indirect
-    connections between nodes. Clustering is then performed on the leading
-    eigenvectors of the normalized graph Laplacian.
+    The affinity matrix is built using a perplexity-based neighborhood scheme, and may
+    optionally be raised to a power :math:``p`` to emphasize indirect connections
+    between nodes. Clustering is then performed on the leading eigenvectors of the
+    normalized graph Laplacian.
 
-    Clusters are obtained by applying k-means to the spectral embedding. The
-    normalized eigengap is used as a stability diagnostic for the clustering
-    structure.
+    Clusters are obtained by applying k-means to the spectral embedding. The normalized
+    eigengap is used as a stability diagnostic for the clustering structure.
 
     Clustering settings:
         - ``n_clusters``: Number of clusters to form.
@@ -52,8 +50,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
 
     Attributes:
         n_clusters (int): Number of clusters requested by the user.
-        n_nodes (int): Number of graph nodes used to construct the affinity
-            structure.
+        n_nodes (int): Number of graph nodes used to construct the affinity structure.
         p (float): Power applied to the affinity matrix.
         perplexity (float): Target perplexity used when computing affinities.
         n_iter (int): Maximum number of iterations for the k-means step.
@@ -120,14 +117,14 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
             p (float, optional): Power applied to the affinity matrix. Defaults to 2.0.
             perplexity (float, optional): Target perplexity for the affinity matrix.
                 Defaults to 2.0.
-            n_iter (int, optional): Number of iterations to run the k-means
-                algorithm. Defaults to 20.
+            n_iter (int, optional): Number of iterations to run the k-means algorithm.
+                Defaults to 20.
             n_local_trials (int | None, optional): Number of seeding trials for
                 centroids initialization. Defaults to None.
-            random_state (int | None, optional): Determines random number
-                generation for centroid initialization. Defaults to None.
-            tol (float, optional): Tolerance for the normalized eigengap.
-                Defaults to 1e-8.
+            random_state (int | None, optional): Determines random number generation for
+                centroid initialization. Defaults to None.
+            tol (float, optional): Tolerance for the normalized eigengap. Defaults to
+                1e-8.
         """
         self.n_clusters = n_clusters
         self.n_nodes = n_nodes
@@ -209,10 +206,10 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
         Args:
             affinity_matrix (np.ndarray): The affinity matrix.
             perplexity (float): The target perplexity.
-            low (float, optional): The lower bound for the binary search.
-                Defaults to 0.0.
-            high (float, optional): The upper bound for the binary search.
-                Defaults to 1000.0.
+            low (float, optional): The lower bound for the binary search. Defaults to
+                0.0.
+            high (float, optional): The upper bound for the binary search. Defaults to
+                1000.0.
             max_iter (int, optional): The maximum number of iterations for the binary
                 search. Defaults to 16.
             tol (float, optional): The relative tolerance for the binary search.
