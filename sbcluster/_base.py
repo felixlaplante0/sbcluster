@@ -20,7 +20,7 @@ class SpectralBridges(ClusterMixin, BaseEstimator):
     separation, followed by a k-means step in the spectral embedding space.
 
     The affinity matrix is built using a perplexity-based neighborhood scheme, and may
-    optionally be raised to a power :math:``p`` to emphasize indirect connections
+    optionally be raised to a power :math:`p` to emphasize indirect connections
     between nodes. Clustering is then performed on the leading eigenvectors of the
     normalized graph Laplacian.
 
